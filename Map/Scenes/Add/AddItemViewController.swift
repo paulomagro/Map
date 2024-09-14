@@ -65,13 +65,16 @@ class AddItemViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        bindViewModel()
     }
     
     private func setupView() {
         view.backgroundColor = .white
         view.addSubview(contentStack)
         addButton.addTarget(self, action: #selector(handleAdd), for: .touchUpInside)
+        addButton.isEnabled = false
         cancelButton.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
+        descriptionTextField.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         
         contentStack.addArrangedSubview(typeSegmented)
         contentStack.addArrangedSubview(descriptionTextField)
@@ -85,6 +88,12 @@ class AddItemViewController: UIViewController {
         ])
     }
     
+    func bindViewModel() {
+        viewModel.isEnabled.bind { isEnabled in
+            self.addButton.isEnabled = isEnabled
+        }
+    }
+    
     @objc
     func handleCancel() {
         viewModel.didTapCancel()
@@ -92,9 +101,14 @@ class AddItemViewController: UIViewController {
     
     @objc
     func handleAdd() {
-        let type: ItemType = typeSegmented.selectedSegmentIndex == 0 ? .lost : .found
+        let type: ItemType = typeSegmented.selectedSegmentIndex == 0 ? .found : .lost
         let description: String = descriptionTextField.text ?? ""
         viewModel.didTapAdd(type: type, description: description)
+    }
+    
+    @objc
+    func handleTextChange() {
+        viewModel.validate(text: descriptionTextField.text ?? "")
     }
     
     required init?(coder: NSCoder) {

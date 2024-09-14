@@ -43,10 +43,15 @@ class MapCoordinator: Coordinator {
         
         if let viewController = navigationController.topViewController as? MapViewController {
             viewController.addItem(type: type, description: description)
+            viewController.isAddingItem = false
         }
     }
     
     func cancelAndDismiss() {
         navigationController.dismiss(animated: true)
+        
+        if let viewController = navigationController.topViewController as? MapViewController {
+            viewController.isAddingItem = false
+        }
     }
 }

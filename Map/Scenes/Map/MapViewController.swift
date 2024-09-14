@@ -21,14 +21,21 @@ class MapViewController: UIViewController {
     
     lazy var addButton = ButtonDefault(text: "", imageName: "plus", backgroundColor: .white.withAlphaComponent(0.95))
     
-    let viewModel: MapViewModel
+    lazy var mapPin = ImageDefault(image: "mappin.and.ellipse")
     
+    let viewModel: MapViewModel
+    let locationManager = CLLocationManager()
+    var isAddingItem: Bool = false {
+        didSet {
+            updateAddMode()
+        }
+    }
+
     init(viewModel: MapViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
-    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +45,13 @@ class MapViewController: UIViewController {
         locationManager.delegate = self
         mapView.delegate = self
         mapView.register(ItemAnnotationView.self, forAnnotationViewWithReuseIdentifier: "\(ItemAnnotationView.self)")
+        updateAddMode()
     }
 
     private func setupView() {
         view.addSubview(mapView)
         view.addSubview(addButton)
+        view.addSubview(mapPin)
         addButton.addTarget(self, action: #selector(handleAdd), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
@@ -55,13 +64,28 @@ class MapViewController: UIViewController {
             addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
             addButton.heightAnchor.constraint(equalToConstant: 44),
             addButton.widthAnchor.constraint(equalToConstant: 44),
+            
+            mapPin.centerXAnchor.constraint(equalTo: mapView.centerXAnchor),
+            mapPin.centerYAnchor.constraint(equalTo: mapView.centerYAnchor),
+            mapPin.heightAnchor.constraint(equalToConstant: 60),
+            mapPin.widthAnchor.constraint(equalTo: mapPin.heightAnchor),
         ])
+    }
+    
+    func updateAddMode () {
+        if isAddingItem {
+            addButton.isHidden = true
+            mapPin.isHidden = false
+        } else {
+            addButton.isHidden = false
+            mapPin.isHidden = true
+        }
     }
     
     @objc
     func handleAdd() {
         viewModel.didTapAdd()
-        //addItem(type: .lost, description: "Teste")
+        isAddingItem = true
     }
             
     func addItem(type: ItemType, description: String) {
@@ -99,7 +123,8 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if let view = view as? ItemAnnotationView, let annotation = view.annotation as? ItemAnnotation {
             mapView.removeAnnotation(annotation)
-            mapView.addAnnotation(ItemAnnotation(item: .init(coordinate: annotation.coordinate, type: .returned, description: annotation.item.description)))
+            viewModel.markAsReturned(item: annotation.item)
+            addAnnotationForLastItem()
         }
     }
     
@@ -117,8 +142,6 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         if let coordinate = locations.last?.coordinate {
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 250, longitudinalMeters: 250)
             mapView.region = region
-            let annotation = ItemAnnotation(item: .init(coordinate: coordinate, type: .lost, description: "Chaveiro"))
-            mapView.addAnnotation(annotation)
         }
     }
     

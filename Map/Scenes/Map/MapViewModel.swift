@@ -22,4 +22,11 @@ class MapViewModel {
     func didTapAdd() {
         coordinator.presentAdd()
     }
+    
+    func markAsReturned(item: Item) {
+        if let index = items.firstIndex(of: item) {
+            items.remove(at: index)
+            items.append(.init(coordinate: item.coordinate, type: .returned, description: item.description))
+        }
+    }
 }
