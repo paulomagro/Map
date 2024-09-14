@@ -18,4 +18,8 @@ class MapViewModel {
     func add(item: Item) {
         items.append(item)
     }
+    
+    func didTapAdd() {
+        coordinator.presentAdd()
+    }
 }

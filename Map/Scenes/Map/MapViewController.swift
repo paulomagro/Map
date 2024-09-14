@@ -60,7 +60,8 @@ class MapViewController: UIViewController {
     
     @objc
     func handleAdd() {
-        addItem(type: .lost, description: "Teste")
+        viewModel.didTapAdd()
+        //addItem(type: .lost, description: "Teste")
     }
             
     func addItem(type: ItemType, description: String) {

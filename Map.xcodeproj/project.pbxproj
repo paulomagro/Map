@@ -20,6 +20,8 @@
 		3AA893152C9510D000CF3B84 /* ButtonDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA893142C9510D000CF3B84 /* ButtonDefault.swift */; };
 		3AA893172C9510DB00CF3B84 /* MapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA893162C9510DB00CF3B84 /* MapCoordinator.swift */; };
 		3AA8931A2C95117B00CF3B84 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA893192C95117B00CF3B84 /* MapViewModel.swift */; };
+		3AA8931D2C95128300CF3B84 /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA8931C2C95128300CF3B84 /* AddItemViewController.swift */; };
+		3AA8931F2C95128A00CF3B84 /* AddItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA8931E2C95128A00CF3B84 /* AddItemViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		3AA893142C9510D000CF3B84 /* ButtonDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonDefault.swift; sourceTree = "<group>"; };
 		3AA893162C9510DB00CF3B84 /* MapCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapCoordinator.swift; sourceTree = "<group>"; };
 		3AA893192C95117B00CF3B84 /* MapViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		3AA8931C2C95128300CF3B84 /* AddItemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
+		3AA8931E2C95128A00CF3B84 /* AddItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				3AA893162C9510DB00CF3B84 /* MapCoordinator.swift */,
+				3AA8931B2C95127500CF3B84 /* Add */,
 				3AA893182C9510E200CF3B84 /* Map */,
 			);
 			path = Scenes;
@@ -118,6 +123,15 @@
 				3AA8930B2C950BA700CF3B84 /* Item.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		3AA8931B2C95127500CF3B84 /* Add */ = {
+			isa = PBXGroup;
+			children = (
+				3AA8931C2C95128300CF3B84 /* AddItemViewController.swift */,
+				3AA8931E2C95128A00CF3B84 /* AddItemViewModel.swift */,
+			);
+			path = Add;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,11 +209,13 @@
 				3AA892F82C94F4D100CF3B84 /* MapViewController.swift in Sources */,
 				3AA893172C9510DB00CF3B84 /* MapCoordinator.swift in Sources */,
 				3AA893082C950B9500CF3B84 /* ItemAnnotation.swift in Sources */,
+				3AA8931D2C95128300CF3B84 /* AddItemViewController.swift in Sources */,
 				3AA8930A2C950B9F00CF3B84 /* ItemAnnotationView.swift in Sources */,
 				3AA8931A2C95117B00CF3B84 /* MapViewModel.swift in Sources */,
 				3AA892F42C94F4D100CF3B84 /* AppDelegate.swift in Sources */,
 				3AA8930C2C950BA700CF3B84 /* Item.swift in Sources */,
 				3AA893102C950E2200CF3B84 /* LabelDefault.swift in Sources */,
+				3AA8931F2C95128A00CF3B84 /* AddItemViewModel.swift in Sources */,
 				3AA892F62C94F4D100CF3B84 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
