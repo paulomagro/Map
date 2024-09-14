@@ -19,11 +19,21 @@ class MapViewController: UIViewController {
         return mapView
     }()
     
+    lazy var addButton = ButtonDefault(text: "", imageName: "plus", backgroundColor: .white.withAlphaComponent(0.95))
+    
+    let viewModel: MapViewModel
+    
+    init(viewModel: MapViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        navigationController?.setNavigationBarHidden(true, animated: false)
         setupView()
         locationManager.delegate = self
         mapView.delegate = self
@@ -32,13 +42,42 @@ class MapViewController: UIViewController {
 
     private func setupView() {
         view.addSubview(mapView)
+        view.addSubview(addButton)
+        addButton.addTarget(self, action: #selector(handleAdd), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+            addButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            addButton.heightAnchor.constraint(equalToConstant: 44),
+            addButton.widthAnchor.constraint(equalToConstant: 44),
         ])
+    }
+    
+    @objc
+    func handleAdd() {
+        addItem(type: .lost, description: "Teste")
+    }
+            
+    func addItem(type: ItemType, description: String) {
+        let coordinate = mapView.centerCoordinate
+        viewModel.add(item: .init(coordinate: coordinate, type: type, description: description))
+        addAnnotationForLastItem()
+    }
+    
+    func addAnnotationForLastItem() {
+        if let item = viewModel.items.last {
+            let annotation = ItemAnnotation(item: item)
+            mapView.addAnnotation(annotation)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -56,6 +95,13 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         return view
     }
     
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let view = view as? ItemAnnotationView, let annotation = view.annotation as? ItemAnnotation {
+            mapView.removeAnnotation(annotation)
+            mapView.addAnnotation(ItemAnnotation(item: .init(coordinate: annotation.coordinate, type: .returned, description: annotation.item.description)))
+        }
+    }
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -70,7 +116,7 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         if let coordinate = locations.last?.coordinate {
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 250, longitudinalMeters: 250)
             mapView.region = region
-            let annotation = ItemAnnotation(item: .init(coordinate: coordinate, type: .found, description: "haveiro"))
+            let annotation = ItemAnnotation(item: .init(coordinate: coordinate, type: .lost, description: "Chaveiro"))
             mapView.addAnnotation(annotation)
         }
     }
