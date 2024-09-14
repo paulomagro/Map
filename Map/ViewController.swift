@@ -26,6 +26,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         setupView()
         locationManager.delegate = self
+        mapView.delegate = self
+        mapView.register(ItemAnnotationView.self, forAnnotationViewWithReuseIdentifier: "\(ItemAnnotationView.self)")
     }
 
     private func setupView() {
@@ -40,7 +42,20 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: CLLocationManagerDelegate {
+extension ViewController: CLLocationManagerDelegate, MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let annotation = annotation as? ItemAnnotation else {
+            return nil
+        }
+        
+        let view = mapView.dequeueReusableAnnotationView(withIdentifier: "\(ItemAnnotationView.self)", for: annotation)
+        if let view = view as? ItemAnnotationView {
+            view.configure(annotation: annotation)
+        }
+        
+        return view
+    }
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -55,6 +70,8 @@ extension ViewController: CLLocationManagerDelegate {
         if let coordinate = locations.last?.coordinate {
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 250, longitudinalMeters: 250)
             mapView.region = region
+            let annotation = ItemAnnotation(item: .init(coordinate: coordinate, type: .found, description: "haveiro"))
+            mapView.addAnnotation(annotation)
         }
     }
     
