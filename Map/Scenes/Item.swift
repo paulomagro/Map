@@ -25,6 +25,30 @@ enum ItemType {
             return .returned
         }
     }
+    
+    var image: UIImage? {
+        switch self {
+            
+        case .lost:
+            UIImage(systemName: "xmark.seal")
+        case .found:
+            UIImage(systemName: "seal")
+        case .returned:
+            UIImage(systemName: "checkmark.seal")
+        }
+    }
+    
+    var title: String {
+        switch self {
+            
+        case .lost:
+            "Item perdido:"
+        case .found:
+            "Item encontrado:"
+        case .returned:
+            "Item recuperado:"
+        }
+    }
 }
 
 struct Item {
